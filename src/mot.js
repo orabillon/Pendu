@@ -18,19 +18,38 @@ class Mot{
             else
                 m += "-" 
         });
-        console.log(m);
+        return m;
     }
 
     proposerLettre(pLettre){
+        let lettrePresente = 0;
         this.lstLettre.forEach(lettre => {
             if(lettre.lettre == pLettre){
                 lettre.setVisible(true);
                 this.lettreRestant--;
-            }
-                
-           
+                lettrePresente++;
+            }   
         });
 
-        this.affichageMot();
+        return lettrePresente;
+    }
+
+    proposerMot(pMot){
+        if(pMot == this.mot){
+            return true;
+        }
+        return false;
+    }
+
+    getListeLettre(){
+        return this.lstLettre;
+    }
+
+    getNbLettreRestante(){
+        return this.lettreRestant;
+    }
+
+    getMot(){
+        return this.mot;
     }
 }
