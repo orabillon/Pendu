@@ -5,9 +5,10 @@ const dictionnaire = ['armoire'];
 //                       'chat','cachette','cadenas','cadeau','calendrier','casquette','cerveau'];
 
 //
+let alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 let MotADeviner;
 let mot = "";
-let nbCoups= 0;
+let nbCoups= 11;
 let nbCoupVictoire = 0;
 
 
@@ -20,8 +21,20 @@ function tirageMot(){
     MotADeviner = new Mot(mot);
 } 
 
-tirageMot();
-console.log(MotADeviner);
+function afficheAlphabet(pElement){
+    alphabet.forEach(lettre => {
+        let image = new Image();
+        image.src = `../../images/${lettre}.png`;
+        pElement.append(image);
+    });
+}
+
+function affichePendu(pElement){
+    let image = new Image();
+    image.src = `../../images/Pendu${nbCoups}.png`;
+    $(pElement).append(image);
+} 
+
 
 //      ██╗███████╗██╗   ██╗    ██╗   ██╗███████╗██████╗ ███████╗██╗ ██████╗ ███╗   ██╗    ██╗  ██╗████████╗███╗   ███╗██╗     
 //      ██║██╔════╝██║   ██║    ██║   ██║██╔════╝██╔══██╗██╔════╝██║██╔═══██╗████╗  ██║    ██║  ██║╚══██╔══╝████╗ ████║██║     
@@ -30,11 +43,43 @@ console.log(MotADeviner);
 // ╚█████╔╝███████╗╚██████╔╝     ╚████╔╝ ███████╗██║  ██║███████║██║╚██████╔╝██║ ╚████║    ██║  ██║   ██║   ██║ ╚═╝ ██║███████╗
 //  ╚════╝ ╚══════╝ ╚═════╝       ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚══════╝
                                                                                                                             
-// 
+                                
 let dateActuelle = new Date();
-dateActuelle.getFullYear();
+
 let footer = document.getElementById('footer');
 footer.innerText = `Olivier Rabillon ©${dateActuelle.getFullYear()}`;
+
+// cache les element de jeu
+$('#regleJeu').hide();
+$('#jeu').hide();
+
+// affiche et cache les regles 
+$('#regle').click(() => {
+    $('#regleJeu').toggle();
+});
+
+// lance une nouvelle partie 
+$('#nouvellePartie').click(() => {
+    $('#nouvellePartie').hide();
+    $('#regle').hide();
+    $('#regleJeu').hide();
+    $('#jeu').show();
+    jeu();
+});
+
+
+
+let divMot = document.getElementById('mot');
+let divPendu = document.getElementById('pendu');
+let divLettre = document.getElementById('lettre');
+
+function jeu(){
+    tirageMot();
+    affichePendu(divPendu);
+    MotADeviner.afficheMot(divMot);
+    afficheAlphabet(divLettre);
+}
+
 
 
 // ---------------------------------------------------------------

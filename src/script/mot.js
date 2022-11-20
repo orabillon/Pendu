@@ -12,13 +12,30 @@ class Mot{
 
     affichageMot(){
         let m = "";
-        this.lstLettre.forEach(lettre => {
+        this.lstLettre.toUpperCase().forEach(lettre => {
             if(lettre.visible)
                 m += lettre.lettre;
             else
                 m += "-" 
         });
+        
         return m;
+    }
+
+    afficheMot(pElement){
+
+        this.lstLettre.forEach(lettre => {
+            if(lettre.visible)
+                $(pElement).append(lettre.image);
+            else
+               {
+                let tiret = new Image();
+                tiret.src = "../../images/tiret.png"
+                $(pElement).append(tiret);
+               } 
+                
+        });
+        
     }
 
     proposerLettre(pLettre){
