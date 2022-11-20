@@ -1,0 +1,52 @@
+:root
+{
+    --couleurPrincipal : #87A2FB;
+    --couleurSecondaire : #A8A4CE;
+    --couleurtertiaire : #4b4a49;
+    --couleurquaternaire : #EAEAEA;
+}
+
+html{
+    height: 100%;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+h1{
+    font-size: 3em;
+    padding: 10px;
+    padding-top: 0;
+    margin-top: 0;
+    text-align: center;
+    color: var(--couleurtertiaire);
+
+}
+
+p{
+    color: var(--couleurtertiaire);
+}
+
+body{
+     background-color: var(--couleurquaternaire); 
+     margin : 0;
+     height: 100%;
+     display: flex; 
+     flex-direction: column; 
+     justify-content: space-between;
+}
+
+header{
+    background-color: var(--couleurPrincipal);
+}
+
+section{
+    flex-grow: 1;
+}
+
+footer{
+    background-color: var(--couleurSecondaire);
+    padding : 15px;
+    text-align: center;
+}
