@@ -6,3 +6,4 @@ Projet passerelle 1
 - 16/11/2022 : Fin version 1.0 full texte
 - 17/11/2022 : Recherche ressource pour version web
 - 20/11/2022 : Depart version html
+- 22/11/2022 : Suite HTML gestion actions

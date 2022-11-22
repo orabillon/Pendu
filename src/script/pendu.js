@@ -1,3 +1,11 @@
+//  ██████╗ ██████╗ ███╗   ██╗████████╗███████╗██╗  ██╗████████╗███████╗         ██╗███████╗██╗   ██╗    ██████╗ ███████╗███╗   ██╗██████╗ ██╗   ██╗
+// ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝██╔════╝         ██║██╔════╝██║   ██║    ██╔══██╗██╔════╝████╗  ██║██╔══██╗██║   ██║
+// ██║     ██║   ██║██╔██╗ ██║   ██║   █████╗   ╚███╔╝    ██║   █████╗           ██║█████╗  ██║   ██║    ██████╔╝█████╗  ██╔██╗ ██║██║  ██║██║   ██║
+// ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══╝   ██╔██╗    ██║   ██╔══╝      ██   ██║██╔══╝  ██║   ██║    ██╔═══╝ ██╔══╝  ██║╚██╗██║██║  ██║██║   ██║
+// ╚██████╗╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║   ███████╗    ╚█████╔╝███████╗╚██████╔╝    ██║     ███████╗██║ ╚████║██████╔╝╚██████╔╝
+//  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝ ╚══════╝ ╚═════╝     ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═════╝  ╚═════╝ 
+//                                                                                                                                                  
+
 const dictionnaire = ['armoire'];
 
 // , 'attendre', 'apollon','abeille','aeroport','aquarium','architecture',
@@ -5,12 +13,26 @@ const dictionnaire = ['armoire'];
 //                       'chat','cachette','cadenas','cadeau','calendrier','casquette','cerveau'];
 
 //
-let alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+let alph = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+let alphabet = [];
 let MotADeviner;
 let mot = "";
-let nbCoups= 11;
+let nbCoups= 0;
 let nbCoupVictoire = 0;
 
+function autreTraitementClick(pLettre){
+    divMot.innerHTML = ""; 
+    divLettre.innerHTML = "";
+    divPendu.innerHTML = "";
+
+    afficheAlphabet(divLettre);
+    if (MotADeviner.proposerLettre(pLettre) == 0)
+    {
+        nbCoups++;
+    }
+    MotADeviner.afficheMot(divMot);
+    affichePendu(divPendu);
+}
 
 function rnd(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
@@ -21,18 +43,28 @@ function tirageMot(){
     MotADeviner = new Mot(mot);
 } 
 
+function creerAlphabet(){
+    alph.forEach(lettre => {
+        let lettreAlphabet = new LettreChoix(lettre)
+        lettreAlphabet.image.addEventListener('click',function () {
+            lettreAlphabet.setVisible(false);
+            autreTraitementClick(lettreAlphabet.lettre);
+        });
+        alphabet.push(lettreAlphabet);
+    });
+}
+
 function afficheAlphabet(pElement){
     alphabet.forEach(lettre => {
-        let image = new Image();
-        image.src = `../../images/${lettre}.png`;
-        pElement.append(image);
+        if(lettre.visible)
+           pElement.append(lettre.image)
     });
 }
 
 function affichePendu(pElement){
     let image = new Image();
     image.src = `../../images/Pendu${nbCoups}.png`;
-    $(pElement).append(image);
+    pElement.append(image);
 } 
 
 
@@ -49,34 +81,48 @@ let dateActuelle = new Date();
 let footer = document.getElementById('footer');
 footer.innerText = `Olivier Rabillon ©${dateActuelle.getFullYear()}`;
 
-// cache les element de jeu
-$('#regleJeu').hide();
-$('#jeu').hide();
-
-// affiche et cache les regles 
-$('#regle').click(() => {
-    $('#regleJeu').toggle();
-});
-
-// lance une nouvelle partie 
-$('#nouvellePartie').click(() => {
-    $('#nouvellePartie').hide();
-    $('#regle').hide();
-    $('#regleJeu').hide();
-    $('#jeu').show();
-    jeu();
-});
-
-
-
+// récuperation élément jeu 
 let divMot = document.getElementById('mot');
 let divPendu = document.getElementById('pendu');
 let divLettre = document.getElementById('lettre');
+let regleJeu = document.getElementById('regleJeu');
+let jeux = document.getElementById('jeu');
+let btnRegle = document.getElementById('regle');
+let btnNouvellePartie = document.getElementById('nouvellePartie');
+
+// création des variables
+let regleIsVisible = false;
+
+// cache les partie non utile du jeu
+regleJeu.style.display = "none";
+jeux.style.display = "none";
+
+// definition evenement du jeu
+btnRegle.addEventListener('click', () => {
+    if (regleIsVisible){
+        regleIsVisible = false;
+        regleJeu.style.display = "none";
+    }
+    else
+    {
+        regleIsVisible = true;
+        regleJeu.style.display = "block";
+    }
+});
+
+btnNouvellePartie.addEventListener('click', () => {
+    btnNouvellePartie.style.display = "none";
+    btnRegle.style.display = "none";
+    regleJeu.style.display = "none";
+    jeux.style.display = "block";
+    jeu();
+});
 
 function jeu(){
     tirageMot();
     affichePendu(divPendu);
     MotADeviner.afficheMot(divMot);
+    creerAlphabet();
     afficheAlphabet(divLettre);
 }
 

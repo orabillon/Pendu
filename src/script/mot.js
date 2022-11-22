@@ -26,12 +26,12 @@ class Mot{
 
         this.lstLettre.forEach(lettre => {
             if(lettre.visible)
-                $(pElement).append(lettre.image);
+               pElement.append(lettre.image);
             else
                {
                 let tiret = new Image();
                 tiret.src = "../../images/tiret.png"
-                $(pElement).append(tiret);
+                pElement.append(tiret);
                } 
                 
         });
@@ -41,7 +41,7 @@ class Mot{
     proposerLettre(pLettre){
         let lettrePresente = 0;
         this.lstLettre.forEach(lettre => {
-            if(lettre.lettre == pLettre){
+            if((lettre.lettre).toUpperCase() == pLettre){
                 lettre.setVisible(true);
                 this.lettreRestant--;
                 lettrePresente++;
