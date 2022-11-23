@@ -1,7 +1,7 @@
 class Lettre{
-    constructor(pLettre){
+    constructor(pLettre,pVisible){
         this.lettre = pLettre;
-        this.visible = false;
+        this.visible = pVisible;
         this.image = new Image();
         this.image.src =  `/images/${pLettre}1.png`;
     }

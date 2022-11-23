@@ -50,6 +50,11 @@ footer{
   text-align: center;
 }
 
+#laPropo{
+  width: 400px;
+  margin : 15px 0;
+}
+
 .motFflex{
   display: flex; 
   flex-direction: row; 

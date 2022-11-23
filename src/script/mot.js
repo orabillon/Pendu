@@ -1,22 +1,22 @@
 class Mot{
-    constructor(pMot){
+    constructor(pMot,pVisible){
         this.mot = pMot;
         this.lstLettre = [];
         this.lettreRestant = 0;
 
-        mot.split("").forEach(lettre => {
-            this.lstLettre.push(new Lettre(lettre));
+        this.mot.split("").forEach(lettre => {
+            this.lstLettre.push(new Lettre(lettre,pVisible));
             this.lettreRestant++;
         });
     }
 
     affichageMot(){
         let m = "";
-        this.lstLettre.toUpperCase().forEach(lettre => {
+        this.lstLettre.forEach(lettre => {
             if(lettre.visible)
                 m += lettre.lettre;
             else
-                m += "-" 
+                m += "-";
         });
         
         return m;
@@ -24,13 +24,14 @@ class Mot{
 
     afficheMot(pElement){
 
+        pElement.innerHTML = ""; 
         this.lstLettre.forEach(lettre => {
             if(lettre.visible)
                pElement.append(lettre.image);
             else
                {
                 let tiret = new Image();
-                tiret.src = "../../images/tiret.png"
+                tiret.src = "../../images/tiret.png";
                 pElement.append(tiret);
                } 
                 
@@ -41,7 +42,7 @@ class Mot{
     proposerLettre(pLettre){
         let lettrePresente = 0;
         this.lstLettre.forEach(lettre => {
-            if((lettre.lettre).toUpperCase() == pLettre){
+            if((lettre.lettre).toUpperCase() == pLettre.toUpperCase()){
                 lettre.setVisible(true);
                 this.lettreRestant--;
                 lettrePresente++;
@@ -52,7 +53,7 @@ class Mot{
     }
 
     proposerMot(pMot){
-        if(pMot == this.mot){
+        if(pMot.toUpperCase() == this.mot.toUpperCase()){
             return true;
         }
         return false;
@@ -68,5 +69,11 @@ class Mot{
 
     getMot(){
         return this.mot;
+    }
+
+    reveleMot(){
+        this.lstLettre.forEach(lettre => {
+                lettre.setVisible(true); 
+        });
     }
 }

@@ -6,33 +6,20 @@
 //  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝ ╚══════╝ ╚═════╝     ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═════╝  ╚═════╝ 
 //                                                                                                                                                  
 
-const dictionnaire = ['armoire'];
+const dictionnaire = ['armoire' , 'attendre', 'apollon','abeille','aeroport','aquarium','architecture',
+                       'Bouquet','bonheur','bonbon','bouilloire','bourgeon','brouette','boutique',
+                       'chat','cachette','cadenas','cadeau','calendrier','casquette','cerveau','voiture','espace','mission',
+                       'impossible','paquebot','ultime','frontiere','vaisseau','ans','torche','torchon','serviette','ordinateur',
+                       'encyclopedie','portable','pepin','tasse','chien','pendule','train','montre'];
 
-// , 'attendre', 'apollon','abeille','aeroport','aquarium','architecture',
-//                       'Bouquet','bonheur','bonbon','bouilloire','bourgeon','brouette','boutique',
-//                       'chat','cachette','cadenas','cadeau','calendrier','casquette','cerveau'];
-
-//
 let alph = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 let alphabet = [];
+let resultat = null;
 let MotADeviner;
 let mot = "";
 let nbCoups= 0;
 let nbCoupVictoire = 0;
 
-function autreTraitementClick(pLettre){
-    divMot.innerHTML = ""; 
-    divLettre.innerHTML = "";
-    divPendu.innerHTML = "";
-
-    afficheAlphabet(divLettre);
-    if (MotADeviner.proposerLettre(pLettre) == 0)
-    {
-        nbCoups++;
-    }
-    MotADeviner.afficheMot(divMot);
-    affichePendu(divPendu);
-}
 
 function rnd(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
@@ -40,32 +27,71 @@ function rnd(min, max){
 
 function tirageMot(){
     mot = dictionnaire[rnd(0,dictionnaire.length)];
-    MotADeviner = new Mot(mot);
+    MotADeviner = new Mot(mot,false);
 } 
 
 function creerAlphabet(){
     alph.forEach(lettre => {
-        let lettreAlphabet = new LettreChoix(lettre)
+        let lettreAlphabet = new LettreChoix(lettre);
         lettreAlphabet.image.addEventListener('click',function () {
             lettreAlphabet.setVisible(false);
-            autreTraitementClick(lettreAlphabet.lettre);
+            traitementJeu(lettreAlphabet.lettre);
         });
         alphabet.push(lettreAlphabet);
     });
 }
 
-function afficheAlphabet(pElement){
+function afficheAlphabet(){
+    divLettre.innerHTML = "";
     alphabet.forEach(lettre => {
         if(lettre.visible)
-           pElement.append(lettre.image)
+        divLettre.append(lettre.image);
     });
 }
 
-function affichePendu(pElement){
+function affichePendu(){
+    divPendu.innerHTML = "";
     let image = new Image();
     image.src = `../../images/Pendu${nbCoups}.png`;
-    pElement.append(image);
+    divPendu.append(image);
 } 
+
+function gagner(){
+    resultat = new Mot("GAGNE",true);
+    resultat.afficheMot(divLettre);
+    btnNouvellePartie.style.display = "block";
+    divproposition.style.display = "none";
+}
+
+function afficherInterfaceJeu()
+{
+    affichePendu();
+
+    if (nbCoups == 11){
+        MotADeviner.reveleMot();
+        resultat = new Mot("PERDU",true);
+        resultat.afficheMot(divLettre);
+        btnNouvellePartie.style.display = "block";
+        divproposition.style.display = "none";
+    }
+    else if(MotADeviner.getNbLettreRestante() == 0 && nbCoups<11){
+        gagner();
+    }
+    else{       
+        afficheAlphabet();
+    }
+    
+    MotADeviner.afficheMot(divMot);
+}
+
+function traitementJeu(pLettre){
+    if (MotADeviner.proposerLettre(pLettre) == 0)
+    {
+        nbCoups++;
+    }
+    afficherInterfaceJeu();
+    
+}
 
 
 //      ██╗███████╗██╗   ██╗    ██╗   ██╗███████╗██████╗ ███████╗██╗ ██████╗ ███╗   ██╗    ██╗  ██╗████████╗███╗   ███╗██╗     
@@ -85,10 +111,13 @@ footer.innerText = `Olivier Rabillon ©${dateActuelle.getFullYear()}`;
 let divMot = document.getElementById('mot');
 let divPendu = document.getElementById('pendu');
 let divLettre = document.getElementById('lettre');
+let divproposition = document.getElementById('proposition');
 let regleJeu = document.getElementById('regleJeu');
 let jeux = document.getElementById('jeu');
 let btnRegle = document.getElementById('regle');
 let btnNouvellePartie = document.getElementById('nouvellePartie');
+let btnPropo = document.getElementById('propo');
+let proposition = document.getElementById('laPropo');
 
 // création des variables
 let regleIsVisible = false;
@@ -96,6 +125,7 @@ let regleIsVisible = false;
 // cache les partie non utile du jeu
 regleJeu.style.display = "none";
 jeux.style.display = "none";
+divproposition.style.display = "none";
 
 // definition evenement du jeu
 btnRegle.addEventListener('click', () => {
@@ -115,15 +145,36 @@ btnNouvellePartie.addEventListener('click', () => {
     btnRegle.style.display = "none";
     regleJeu.style.display = "none";
     jeux.style.display = "block";
+    divproposition.style.display = "block";
     jeu();
 });
 
+btnPropo.addEventListener('click', () => {
+    
+    let motProposer = proposition.value;
+
+    if (MotADeviner.proposerMot(motProposer)){
+        MotADeviner.reveleMot();
+        MotADeviner.afficheMot(divMot);
+        gagner();
+    }
+    else
+    {
+        nbCoups++;
+        afficherInterfaceJeu();
+    }
+    proposition.value = "";
+});
+
 function jeu(){
+    // remise a zero si nouvelle partie consecutive
+    nbCoups = 0;
+    alphabet = [];
+    resultat = null;
+
     tirageMot();
-    affichePendu(divPendu);
-    MotADeviner.afficheMot(divMot);
     creerAlphabet();
-    afficheAlphabet(divLettre);
+    afficherInterfaceJeu();
 }
 
 
@@ -138,7 +189,7 @@ function jeu(){
 //  ╚════╝ ╚══════╝ ╚═════╝       ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ╚═╝      ╚═════╝ ╚══════╝╚══════╝       ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝   
 
 // --------------------------------------------------------------
-//let choix = 0;
+// let choix = 0;
 
 // do{
 //     choix = prompt("Que souhaitez vous faire ? \n\n 1: Nouvelle Partie.\n 2: Quitter ");
