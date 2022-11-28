@@ -3,7 +3,7 @@ class Lettre{
         this.lettre = pLettre;
         this.visible = pVisible;
         this.image = new Image();
-        this.image.src =  `/images/${pLettre}1.png`;
+        this.image.src =  `../../images/${pLettre}1.png`;
     }
 
     setVisible(pVisible){
@@ -16,7 +16,7 @@ class LettreChoix{
         this.lettre = pLettre;
         this.visible = true;
         this.image = new Image();
-        this.image.src =  `/images/${pLettre}.png`;
+        this.image.src =  `../../images/${pLettre}.png`;
     }
 
     setVisible(pVisible){
